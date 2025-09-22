@@ -20,6 +20,9 @@ class UserManager
 
     public function register(string $name, string $email, string $password): string
     {
+        $email = Validator::sanitizeEmail($email);
+        $password = Validator::sanitizePassword($password);
+
         if (!Validator::isValidEmail($email)) {
             return "E-mail inválido";
         }
@@ -41,6 +44,9 @@ class UserManager
 
     public function login(string $email, string $password): string
     {
+        $email = Validator::sanitizeEmail($email);
+        $password = Validator::sanitizePassword($password);
+
         $user = $this->findByEmail($email);
         if ($user && password_verify($password, $user->getPasswordHash())) {
             return "Login bem-sucedido";
@@ -50,6 +56,8 @@ class UserManager
 
     public function resetPassword(int $id, string $newPassword): string
     {
+        $newPassword = Validator::sanitizePassword($newPassword);
+
         if (!Validator::isValidPassword($newPassword)) {
             return "Senha fraca: mínimo 8 caracteres, 1 maiúscula e 1 número.";
         }
